@@ -32,5 +32,6 @@ jobs:
           molecule_options: --debug
           molecule_command: test
           molecule_args: --scenario-name ${{ matrix.scenario }} -d docker
+          molecule_working_dir: "organicveggie.postgres_docker"
         env:
           ANSIBLE_FORCE_COLOR: "1"

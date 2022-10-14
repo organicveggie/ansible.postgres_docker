@@ -78,9 +78,12 @@
   when: not postgres_docker_use_volumes
 
 - name: Copy postgresql config
-  copy:
+  ansible.builtin.copy:
     content: "{{ postgres_docker_postgres_conf }}"
     dest: "{{ fact_postgres_docker_conf_folder }}/postgresql.conf"
+    owner: "{{ postgres_docker_user }}"
+    group: "{{ postgres_docker_group }}"
+    mode: "640"
 
 - name: Create PostgreSQL data Docker volume
   community.docker.docker_volume:
@@ -137,7 +140,7 @@
 
 - name: Define Docker labels with Traefik disabled
   ansible.builtin.set_fact:
-    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine ({ item.key : item.value }) }}"
+    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ postgres_docker_available_externally }}"
@@ -145,7 +148,7 @@
 
 - name: Define Docker labels with Traefik enabled
   ansible.builtin.set_fact:
-    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine ({ item.key : item.value }) }}"
+    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ postgres_docker_available_externally }}"
@@ -202,6 +205,9 @@
   ansible.builtin.copy:
     content: "{{ postgres_docker_pg_hba_conf }}"
     dest: "{{ postgres_docker_volume_data_info['volume']['Mountpoint'] }}/pg_hba.conf"
+    owner: "{{ postgres_docker_user }}"
+    group: "{{ postgres_docker_group }}"
+    mode: "640"
   notify: Restart PostgreSQL Docker Container
   when: postgres_docker_use_volumes
 
@@ -209,5 +215,8 @@
   ansible.builtin.copy:
     content: "{{ postgres_docker_pg_hba_conf }}"
     dest: "{{ postgres_docker_data_dir }}/pg_hba.conf"
+    owner: "{{ postgres_docker_user }}"
+    group: "{{ postgres_docker_group }}"
+    mode: "640"
   notify: Restart PostgreSQL Docker Container
   when: not postgres_docker_use_volumes

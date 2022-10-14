@@ -15,7 +15,7 @@
       register: volume_info_init
 
     - name: Verify init volume exists
-      assert:
+      ansible.builtin.assert:
         that: volume_info_init.exists
 
     - name: Get info on conf volume
@@ -24,7 +24,7 @@
       register: volume_info_conf
 
     - name: Verify conf volume exists
-      assert:
+      ansible.builtin.assert:
         that: volume_info_conf.exists
 
     - name: Get info on data volume
@@ -33,7 +33,7 @@
       register: volume_info_data
 
     - name: Verify data volume exists
-      assert:
+      ansible.builtin.assert:
         that: volume_info_data.exists
 
     - name: Get info on container
@@ -42,13 +42,13 @@
       register: container_info
 
     - name: Verify container exists and is running
-      assert:
+      ansible.builtin.assert:
         that:
           - container_info.exists
           - container_info.container['State']['Running']
   
     - name: Verify container labels
-      assert:
+      ansible.builtin.assert:
         that:
           - container_info.container['Config']['Labels']['traefik.enable'] == "true"
           - container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.entrypoints'] == "{{ pg_docker_name }}"

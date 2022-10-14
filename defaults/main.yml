@@ -1,0 +1,80 @@
+postgres_docker_name: "postgres"
+postgres_docker_admin_user: "postgres"
+postgres_docker_admin_password: "changeme"
+
+postgres_docker_user: "postgres"
+postgres_docker_group: "postgres"
+
+# Only used if postgres_docker_use_volumes == false
+postgres_docker_home_dir: "/opt/{{ postgres_docker_name }}"
+postgres_docker_conf_dir: "{{ postgres_docker_home_dir }}/conf"
+postgres_docker_data_dir: "{{ postgres_docker_home_dir }}/data"
+
+# Optional initialization scripts to copy into the PostgreSQL Docker container.
+#
+# Must be path names for files already on the remote system. The container only supports  *.sql,
+# *.sql.gz, and *.sh scripts. After the container calls initdb to create the default postgres user
+# and database, it will run any *.sql files, run any executable *.sh scripts, and source any
+# non-executable *.sh scripts from this list to do further initialization before starting the
+# service.
+postgres_docker_initscripts: []
+
+postgres_docker_use_volumes: true
+postgres_docker_volume_init_name: "postgresql-initscripts"
+postgres_docker_volume_conf_name: "postgresql-conf"
+postgres_docker_volume_data_name: "postgresql-data"
+
+postgres_docker_pgdata:
+postgres_docker_wal_dir:
+
+postgres_docker_memory: "4GB"
+postgres_docker_cpu: "4"
+postgres_docker_shm_size: "256MB"
+
+postgres_docker_network_create: false
+postgres_docker_network_name: "postgres"
+postgres_docker_network_driver: "bridge"
+postgres_docker_network_enable_ipv6: "false"
+postgres_docker_network_internal: "yes"
+postgres_docker_network_scope: "local"
+postgres_docker_network_subnet: "172.100.1.0/24"
+postgres_docker_network_gateway: "172.100.1.1"
+postgres_docker_network_mode: "{{ postgres_docker_network_name }}"
+
+postgres_docker_image: "postgres:latest"
+
+postgres_docker_timezone: "America/Los_Angeles"
+
+postgres_docker_pg_hba_conf: |
+  # This file is managed by Ansible, all changes will be lost.
+  # TYPE  DATABASE        USER            ADDRESS                 METHOD
+  local   all             all                                     trust
+  host    all             all             127.0.0.1/32            trust
+  host    all             all             ::1/128                 trust
+  local   replication     all                                     trust
+  host    replication     all             127.0.0.1/32            trust
+  host    replication     all             ::1/128                 trust
+  host    all             all             all                     md5
+  host    replication     {{ postgres_docker_admin_user }}        all                     md5
+postgres_docker_postgres_conf: |
+  # This file is managed by Ansible, all changes will be lost.
+  listen_addresses = '*'
+  max_connections = 100
+  shared_buffers = 128MB
+  dynamic_shared_memory_type = posix
+  max_wal_size = 1GB
+  min_wal_size = 80MB
+  log_timezone = '{{ postgres_docker_timezone }}'
+  datestyle = 'iso, mdy'
+  timezone = '{{ postgres_docker_timezone }}'
+  lc_messages = 'en_US.utf8'
+  lc_monetary = 'en_US.utf8'
+  lc_numeric = 'en_US.utf8'
+  lc_time = 'en_US.utf8'
+  default_text_search_config = 'pg_catalog.english'
+
+###
+### Traefik integration
+###
+postgres_docker_available_externally: "false"
+postgres_docker_traefik_entrypoint: "{{ postgres_docker_name }}"

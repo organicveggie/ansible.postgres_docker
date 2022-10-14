@@ -1,0 +1,3 @@
+CREATE USER molecule;
+CREATE DATABASE molecule;
+GRANT ALL PRIVILEGES ON DATABASE molecule TO molecule;

@@ -1,0 +1,9 @@
+---
+- import_tasks: setup.yml
+  tags:
+    - postgres
+    - postgres_docker
+    - postgres_docker:setup
+    - postgresql
+    - postgresql_docker
+    - postgresql_docker:setup

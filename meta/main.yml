@@ -4,15 +4,15 @@ galaxy_info:
   author: organicveggie
   description: Role to install PostgreSQL Docker container. 
   license: Apache
-  min_ansible_version: 2.8
+  min_ansible_version: "2.8"
   platforms:
     - name: Ubuntu
       versions:
         - focal
+        - jammy
   galaxy_tags:
     - postgres
     - postgresql
-    - ubiquity
     - docker
 
 dependencies: []

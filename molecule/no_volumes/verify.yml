@@ -1,0 +1,49 @@
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  vars:
+    pg_docker_name: "postgres"
+    pg_docker_volume_name_init: "postgresql-initscripts"
+    pg_docker_volume_name_conf: "postgresql-conf"
+    pg_docker_volume_name_data: "postgresql-data"
+
+  tasks:
+    - name: Get info on init volume
+      community.docker.docker_volume_info:
+        name: "{{ pg_docker_volume_name_init }}"
+      register: volume_info_init
+
+    - name: Verify init volume exists
+      assert:
+        that: volume_info_init.exists
+
+    - name: Get info on conf volume
+      community.docker.docker_volume_info:
+        name: "{{ pg_docker_volume_name_conf }}"
+      register: volume_info_conf
+
+    - name: Verify conf volume does not exist
+      assert:
+        that: not volume_info_conf.exists
+
+    - name: Get info on data volume
+      community.docker.docker_volume_info:
+        name: "{{ pg_docker_volume_name_data }}"
+      register: volume_info_data
+
+    - name: Verify data volume does not exist
+      assert:
+        that: not volume_info_data.exists
+
+    - name: Get info on container
+      community.docker.docker_container_info:
+        name: "{{ pg_docker_name }}"
+      register: container_info
+
+    - name: Verify container exists and is running
+      assert:
+        that:
+          - container_info.exists
+          - container_info.container['State']['Running']
+  

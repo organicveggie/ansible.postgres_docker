@@ -26,12 +26,17 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "organicveggie.postgres_docker"
-      - name: Molecule
-        uses: gofrolist/molecule-action@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
         with:
-          molecule_options: --debug
-          molecule_command: test
-          molecule_args: --scenario-name ${{ matrix.scenario }} -d docker
-          molecule_working_dir: "organicveggie.postgres_docker"
-        env:
-          ANSIBLE_FORCE_COLOR: "1"
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install "molecule"
+          python3 -m pip install "ansible-lint"
+          python3 -m pip install "molecule[docker]"
+      - name: Test with molecule
+        run: |
+          cd organicveggie.postgres_docker
+          molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker

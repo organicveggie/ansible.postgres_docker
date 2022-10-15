@@ -19,7 +19,7 @@ platforms:
 
 provisioner:
   name: "ansible"
-  log: "true"
+  log: true
   playbooks:
     converge: "../resources/playbooks/converge.yml"
   inventory:

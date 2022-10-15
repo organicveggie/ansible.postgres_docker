@@ -31,13 +31,18 @@ jobs:
       - name: "Install lint dependencies."
         run: "pip3 install yamllint ansible ansible-lint"
 
-      - name: "Install role dependencies and Lint code"
+      - name: "Run yamllint"
+        run: |
+          yamllint -c .yamllint -f github -s .
+        working-directory: "${{ env.PROJECT_NAME }}"
+
+      - name: "Install roles and run ansible-lint"
         run: |
           ansible-galaxy role install -r molecule/resources/requirements.yml
-          yamllint -c .yamllint -f github -s .
           ansible-lint
         working-directory: "${{ env.PROJECT_NAME }}"
 
+# yamllint disable rule:comments-indentation
   # molecule:
   #   name: "Molecule"
   #   runs-on: "ubuntu-latest"
@@ -78,3 +83,4 @@ jobs:
   #         PY_COLORS: '1'
   #         ANSIBLE_FORCE_COLOR: '1'
   #         MOLECULE_PLAYBOOK: "${{ matrix.playbook }}"
+# yamllint enable rule:comments-indentation

@@ -10,7 +10,29 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'organicveggie.postgres_docker'
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install lint dependencies.
+        run: pip3 install yamllint
+
+      - name: Lint code.
+        run: |
+          yamllint .
+
   molecule:
+    name: Molecule
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,17 +48,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "organicveggie.postgres_docker"
-      - name: Set up Python 3.8
+
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install dependencies
+
+      - name: Install test dependencies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install "molecule"
-          python3 -m pip install "ansible-lint"
-          python3 -m pip install "molecule[docker]"
-      - name: Test with molecule
+          python3 -m pip install ansible molecule molecule[docker]
+
+      - name: Run Molecule testts
         run: |
           cd organicveggie.postgres_docker
           molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker

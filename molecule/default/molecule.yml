@@ -19,6 +19,7 @@ platforms:
 
 provisioner:
   name: ansible
+  log: True
   playbooks:
     converge: ../resources/playbooks/converge.yml
   inventory:
@@ -27,6 +28,9 @@ provisioner:
         postgres_docker_memory: "1GB"
         postgres_docker_cpu: "1"
         postgres_docker_network_create: "true"
+  env:
+    ANSIBLE_COLLECTIONS_PATH: ../../collections
+    ANSIBLE_ROLES_PATH: ../../roles
 
 verifier:
   name: ansible

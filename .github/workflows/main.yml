@@ -31,7 +31,7 @@ jobs:
       - name: "Lint code."
         run: |
           cd organicveggie.postgres_docker
-          yamllint -c .yamllit -f github -s .
+          yamllint -c .yamllint -f github -s .
           ansible-lint
 
   molecule:

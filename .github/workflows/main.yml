@@ -10,6 +10,9 @@ on:
       - "main"
   workflow_dispatch: null
 
+env:
+  PROJECT_NAME: "organicveggie.postgres_docker"
+
 jobs:
   lint:
     name: "Lint"
@@ -18,7 +21,7 @@ jobs:
       - name: "Check out the codebase."
         uses: "actions/checkout@v2"
         with:
-          path: "organicveggie.postgres_docker"
+          path: "${{ PROJEC_NAME }}"
 
       - name: "Set up Python"
         uses: "actions/setup-python@v2"
@@ -28,11 +31,12 @@ jobs:
       - name: "Install lint dependencies."
         run: "pip3 install yamllint ansible ansible-lint"
 
-      - name: "Lint code."
+      - name: "Install role dependencies and Lint code"
         run: |
-          cd organicveggie.postgres_docker
+          ansible-galaxy role install -r molecule/resources/requirements.yml
           yamllint -c .yamllint -f github -s .
           ansible-lint
+        working-directory: "${{ PROJECT_NAE }}"
 
   molecule:
     name: "Molecule"
@@ -50,7 +54,7 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v2"
         with:
-          path: "organicveggie.postgres_docker"
+          path: "${{ PROJECT_NAE }}"
 
       - name: "Set up Python"
         uses: "actions/setup-python@v2"
@@ -66,6 +70,7 @@ jobs:
         run: |
           cd organicveggie.postgres_docker
           molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
+        working-directory: "${{ PROJECT_NAME }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

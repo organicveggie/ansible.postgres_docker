@@ -1,7 +1,7 @@
 ---
 - name: "Converge - Preinstall"
   hosts: "all"
-  become: "true"
+  become: true
 
   vars:
     pip_install_packages:
@@ -45,7 +45,7 @@
 
 - name: "Converge"
   hosts: "all"
-  become: "true"
+  become: true
 
   vars:
     postgres_docker_initscripts:

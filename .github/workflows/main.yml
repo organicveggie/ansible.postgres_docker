@@ -68,7 +68,6 @@ jobs:
 
       - name: "Run Molecule testts"
         run: |
-          cd organicveggie.postgres_docker
           molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
         working-directory: "${{ env.PROJECT_NAME }}"
         env:

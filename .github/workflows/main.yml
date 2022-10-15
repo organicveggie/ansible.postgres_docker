@@ -46,10 +46,10 @@ jobs:
       matrix:
         scenario:
           - "default"
-          - "custom_names"
-          - "init_scripts"
-          - "no_volumes"
-          - "traefik"
+          # - "custom_names"
+          # - "init_scripts"
+          # - "no_volumes"
+          # - "traefik"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v2"
@@ -60,6 +60,10 @@ jobs:
         uses: "actions/setup-python@v2"
         with:
           python-version: 3.8
+
+      - name: "Install Docker"
+        run: |
+          apt-get install docker
 
       - name: "Install test dependencies"
         run: |

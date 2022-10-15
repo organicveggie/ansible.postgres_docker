@@ -26,11 +26,12 @@ jobs:
           python-version: 3.8
 
       - name: "Install lint dependencies."
-        run: "pip3 install yamllint"
+        run: "pip3 install yamllint ansible ansible-lint"
 
       - name: "Lint code."
         run: |
-          yamllint -c .yamllit -f github .
+          yamllint -c .yamllit -f github -s .
+          ansible-lint
 
   molecule:
     name: "Molecule"

@@ -38,43 +38,43 @@ jobs:
           ansible-lint
         working-directory: "${{ env.PROJECT_NAME }}"
 
-  molecule:
-    name: "Molecule"
-    runs-on: "ubuntu-latest"
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - "default"
-          # - "custom_names"
-          # - "init_scripts"
-          # - "no_volumes"
-          # - "traefik"
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-        with:
-          path: "${{ env.PROJECT_NAME }}"
+  # molecule:
+  #   name: "Molecule"
+  #   runs-on: "ubuntu-latest"
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       scenario:
+  #         - "default"
+  #         - "custom_names"
+  #         - "init_scripts"
+  #         - "no_volumes"
+  #         - "traefik"
+  #   steps:
+  #     - name: "Checkout"
+  #       uses: "actions/checkout@v2"
+  #       with:
+  #         path: "${{ env.PROJECT_NAME }}"
 
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: 3.8
+  #     - name: "Set up Python"
+  #       uses: "actions/setup-python@v2"
+  #       with:
+  #         python-version: 3.8
 
-      - name: "Install Docker"
-        run: |
-          apt-get install docker
+  #     - name: "Install Docker"
+  #       run: |
+  #         apt-get install docker
 
-      - name: "Install test dependencies"
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ansible molecule molecule[docker]
+  #     - name: "Install test dependencies"
+  #       run: |
+  #         python3 -m pip install --upgrade pip
+  #         python3 -m pip install ansible molecule molecule[docker]
 
-      - name: "Run Molecule testts"
-        run: |
-          molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
-        working-directory: "${{ env.PROJECT_NAME }}"
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_PLAYBOOK: "${{ matrix.playbook }}"
+  #     - name: "Run Molecule testts"
+  #       run: |
+  #         molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
+  #       working-directory: "${{ env.PROJECT_NAME }}"
+  #       env:
+  #         PY_COLORS: '1'
+  #         ANSIBLE_FORCE_COLOR: '1'
+  #         MOLECULE_PLAYBOOK: "${{ matrix.playbook }}"

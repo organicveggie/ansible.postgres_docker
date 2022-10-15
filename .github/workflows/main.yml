@@ -21,7 +21,7 @@ jobs:
       - name: "Check out the codebase."
         uses: "actions/checkout@v2"
         with:
-          path: "${{ PROJEC_NAME }}"
+          path: "${{ PROJECT_NAME }}"
 
       - name: "Set up Python"
         uses: "actions/setup-python@v2"
@@ -36,7 +36,7 @@ jobs:
           ansible-galaxy role install -r molecule/resources/requirements.yml
           yamllint -c .yamllint -f github -s .
           ansible-lint
-        working-directory: "${{ PROJECT_NAE }}"
+        working-directory: "${{ PROJECT_NAME }}"
 
   molecule:
     name: "Molecule"
@@ -54,7 +54,7 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v2"
         with:
-          path: "${{ PROJECT_NAE }}"
+          path: "${{ PROJECT_NAME }}"
 
       - name: "Set up Python"
         uses: "actions/setup-python@v2"

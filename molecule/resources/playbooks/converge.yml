@@ -1,45 +1,45 @@
 ---
-- name: Converge
-  hosts: all
+- name: "Converge"
+  hosts: "all"
   become: true
 
   vars:
     pip_install_packages:
-      - name: docker
+      - name: "docker"
     docker_daemon_options:
       storage-driver: "overlay2"
 
   pre_tasks:
-    - name: Update apt cache
+    - name: "Update apt cache"
       ansible.builtin.apt:
         cache_valid_time: 600
-        update_cache: yes
-      when: ansible_os_family == 'Debian'
+        update_cache: "yes"
+      when: "ansible_os_family == 'Debian'"
 
-    - name: Wait for systemd to complete initialization
-      ansible.builtin.command: systemctl is-system-running # noqa: command-instead-of-module
-      register: systemctl_status
+    - name: "Wait for systemd to complete initialization"
+      ansible.builtin.command: "systemctl is-system-running"  # noqa: command-instead-of-module
+      register: "systemctl_status"
       until: >
         'running' in systemctl_status.stdout or
         'degraded' in systemctl_status.stdout
       retries: 30
       delay: 5
-      when: ansible_service_mgr == 'systemd'
-      changed_when: false
-      failed_when: systemctl_status.rc > 1
+      when: "ansible_service_mgr == 'systemd'"
+      changed_when: "false"
+      failed_when: "systemctl_status.rc > 1"
 
-    - name: Install timezone data
+    - name: "Install timezone data"
       ansible.builtin.apt:
-        name: tzdata
-        state: present
-      when: ansible_os_family == 'Debian'
+        name: "tzdata"
+        state: "present"
+      when: "ansible_os_family == 'Debian'"
 
-    - name: Set timezone to Asia/Tokyo
+    - name: "Set timezone to Asia/Tokyo"
       community.general.timezone:
-        name: Asia/Tokyo
-      when: ansible_os_family == 'Debian'
+        name: "Asia/Tokyo"
+      when: "ansible_os_family == 'Debian'"
 
   roles:
-    - geerlingguy.pip
-    - geerlingguy.docker
-    - organicveggie.postgres_docker
+    - "geerlingguy.pip"
+    - "geerlingguy.docker"
+    - "organicveggie.postgres_docker"

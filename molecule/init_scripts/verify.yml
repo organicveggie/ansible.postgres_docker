@@ -1,6 +1,7 @@
-- name: Verify
-  hosts: all
-  gather_facts: false
+---
+- name: "Verify"
+  hosts: "all"
+  gather_facts: "false"
 
   vars:
     pg_docker_name: "postgres"
@@ -9,51 +10,53 @@
     pg_docker_volume_name_data: "postgresql-data"
 
   tasks:
-    - name: Get info on init volume
+    - name: "Get info on init volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_init }}"
-      register: volume_info_init
+      register: "volume_info_init"
 
-    - name: Verify init volume exists
+    - name: "Verify init volume exists"
       ansible.builtin.assert:
-        that: volume_info_init.exists
+        that: "volume_info_init.exists"
 
-    - name: Get info on conf volume
+    - name: "Get info on conf volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_conf }}"
-      register: volume_info_conf
+      register: "volume_info_conf"
 
-    - name: Verify conf volume exists
+    - name: "Verify conf volume exists"
       ansible.builtin.assert:
-        that: volume_info_conf.exists
+        that: "volume_info_conf.exists"
 
-    - name: Get info on data volume
+    - name: "Get info on data volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_data }}"
-      register: volume_info_data
+      register: "volume_info_data"
 
-    - name: Verify data volume exists
+    - name: "Verify data volume exists"
       ansible.builtin.assert:
-        that: volume_info_data.exists
+        that: "volume_info_data.exists"
 
-    - name: Get info on container
+    - name: "Get info on container"
       community.docker.docker_container_info:
         name: "{{ pg_docker_name }}"
-      register: container_info
+      register: "container_info"
 
-    - name: Verify container exists and is running
+    - name: "Verify container exists and is running"
       ansible.builtin.assert:
         that:
-          - container_info.exists
-          - container_info.container['State']['Running']
+          - "container_info.exists"
+          - "container_info.container['State']['Running']"
 
-    - name: Run psql command to check table data
+    - name: "Run psql command to check table data"
       community.docker.docker_container_exec:
         container: "{{ pg_docker_name }}"
-        command: "psql --csv --tuples-only --username molecule --dbname molecule --command 'SELECT * FROM test;'"
-      register: psql_result
-    
-    - name: Verify table data output
+        command: |
+          psql --csv --tuples-only --username molecule --dbname molecule
+          --command 'SELECT * FROM test;'"
+      register: "psql_result"
+
+    - name: "Verify table data output"
       ansible.builtin.assert:
         that:
-          - psql_result.stdout_lines == ["42", "54"]
+          - "psql_result.stdout_lines == ['42', '54']"

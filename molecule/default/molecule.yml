@@ -1,27 +1,27 @@
 ---
 dependency:
-  name: galaxy
+  name: "galaxy"
   options:
-    requirements-file: molecule/resources/requirements.yml
-    role-file: molecule/resources/requirements.yml
+    requirements-file: "molecule/resources/requirements.yml"
+    role-file: "molecule/resources/requirements.yml"
 
 driver:
-  name: docker
+  name: "docker"
 
 platforms:
-  - name: instance
+  - name: "instance"
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    command: "${MOLECULE_DOCKER_COMMAND:-''}"
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    privileged: true
-    pre_build_image: true
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    privileged: "true"
+    pre_build_image: "true"
 
 provisioner:
-  name: ansible
-  log: True
+  name: "ansible"
+  log: "true"
   playbooks:
-    converge: ../resources/playbooks/converge.yml
+    converge: "../resources/playbooks/converge.yml"
   inventory:
     host_vars:
       instance:
@@ -29,11 +29,11 @@ provisioner:
         postgres_docker_cpu: "1"
         postgres_docker_network_create: "true"
   env:
-    ANSIBLE_COLLECTIONS_PATH: ../../collections
-    ANSIBLE_ROLES_PATH: ../../roles
+    ANSIBLE_COLLECTIONS_PATH: "../../collections"
+    ANSIBLE_ROLES_PATH: "../../roles"
 
 verifier:
-  name: ansible
+  name: "ansible"
 
 lint: |
   set -e

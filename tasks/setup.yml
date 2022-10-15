@@ -1,52 +1,52 @@
 ---
-- name: Create PostgreSQL group
+- name: "Create PostgreSQL group"
   ansible.builtin.group:
     name: "{{ postgres_docker_group }}"
     gid: "{{ postgres_docker_gid | default(omit) }}"
-    state: present
+    state: "present"
 
-- name: Create PostgreSQL user
+- name: "Create PostgreSQL user"
   ansible.builtin.user:
     name: "{{ postgres_docker_user }}"
     uid: "{{ postgres_docker_uid | default(omit) }}"
-    shell: /usr/bin/false
-    state: present
+    shell: "/usr/bin/false"
+    state: "present"
     password: "*"
-    update_password: always
-    create_home: no
+    update_password: "always"
+    create_home: "no"
     group: "{{ postgres_docker_group }}"
 
-- name: Create PostgreSQL directories for bind mounts
+- name: "Create PostgreSQL directories for bind mounts"
   ansible.builtin.file:
     path: "{{ item }}"
-    state: directory
+    state: "directory"
     owner: "{{ postgres_docker_user }}"
     group: "{{ postgres_docker_group }}"
-    mode: 0770
+    mode: "0770"
   loop:
     - "{{ postgres_docker_home_dir }}"
     - "{{ postgres_docker_conf_dir }}"
-  when: not postgres_docker_use_volumes
+  when: "not postgres_docker_use_volumes"
 
-- name: Create PostgreSQL data directory for bind mount
+- name: "Create PostgreSQL data directory for bind mount"
   ansible.builtin.file:
     path: "{{ postgres_docker_data_dir }}"
-    state: directory
+    state: "directory"
     owner: "{{ postgres_docker_user }}"
     group: "{{ postgres_docker_group }}"
-    mode: 0700
-  when: not postgres_docker_use_volumes
+    mode: "0700"
+  when: "not postgres_docker_use_volumes"
 
-- name: Create PostgreSQL init script Docker volume
+- name: "Create PostgreSQL init script Docker volume"
   community.docker.docker_volume:
     name: "{{ postgres_docker_volume_init_name }}"
 
-- name: Get info on init script Docker volume
+- name: "Get info on init script Docker volume"
   community.docker.docker_volume_info:
     name: "{{ postgres_docker_volume_init_name }}"
-  register: postgres_docker_volume_init_info
+  register: "postgres_docker_volume_init_info"
 
-- name: Copy init scripts into Docker volume
+- name: "Copy init scripts into Docker volume"
   ansible.builtin.copy:
     remote_src: "true"
     src: "{{ item }}"
@@ -56,41 +56,42 @@
     group: "{{ postgres_docker_group }}"
   loop: "{{ postgres_docker_initscripts }}"
 
-- name: Create PostgreSQL conf Docker volume
+- name: "Create PostgreSQL conf Docker volume"
   community.docker.docker_volume:
     name: "{{ postgres_docker_volume_conf_name }}"
-  when: postgres_docker_use_volumes
+  when: "postgres_docker_use_volumes"
 
-- name: Get info on conf Docker volume
+- name: "Get info on conf Docker volume"
   community.docker.docker_volume_info:
     name: "{{ postgres_docker_volume_conf_name }}"
-  register: postgres_docker_volume_conf_info
-  when: postgres_docker_use_volumes
+  register: "postgres_docker_volume_conf_info"
+  when: "postgres_docker_use_volumes"
 
-- name: Build target path to conf folder on Docker volume
+- name: "Build target path to conf folder on Docker volume"
   ansible.builtin.set_fact:
-    fact_postgres_docker_conf_folder: "{{ postgres_docker_volume_conf_info['volume']['Mountpoint'] }}"
-  when: postgres_docker_use_volumes
+    fact_postgres_docker_conf_folder:
+      "{{ postgres_docker_volume_conf_info['volume']['Mountpoint'] }}"
+  when: "postgres_docker_use_volumes"
 
-- name: Build target path to conf folder for bind mount
+- name: "Build target path to conf folder for bind mount"
   ansible.builtin.set_fact:
     fact_postgres_docker_conf_folder: "{{ postgres_docker_conf_dir }}"
-  when: not postgres_docker_use_volumes
+  when: "not postgres_docker_use_volumes"
 
-- name: Copy postgresql config
+- name: "Copy postgresql config"
   ansible.builtin.copy:
     content: "{{ postgres_docker_postgres_conf }}"
     dest: "{{ fact_postgres_docker_conf_folder }}/postgresql.conf"
     owner: "{{ postgres_docker_user }}"
     group: "{{ postgres_docker_group }}"
-    mode: "640"
+    mode: "0640"
 
-- name: Create PostgreSQL data Docker volume
+- name: "Create PostgreSQL data Docker volume"
   community.docker.docker_volume:
     name: "{{ postgres_docker_volume_data_name }}"
-  when: postgres_docker_use_volumes
+  when: "postgres_docker_use_volumes"
 
-- name: Set Docker volume list for bind mounts
+- name: "Set Docker volume list for bind mounts"
   ansible.builtin.set_fact:
     fact_postgres_docker_mount_list:
       - source: "{{ postgres_docker_volume_init_name }}"
@@ -106,9 +107,9 @@
         target: "/etc/passwd"
         type: "bind"
         read_only: "true"
-  when: not postgres_docker_use_volumes
+  when: "not postgres_docker_use_volumes"
 
-- name: Set Docker mount list for volume mounts
+- name: "Set Docker mount list for volume mounts"
   ansible.builtin.set_fact:
     fact_postgres_docker_mount_list:
       - source: "{{ postgres_docker_volume_init_name }}"
@@ -123,10 +124,10 @@
       - source: "/etc/passwd"
         target: "/etc/passwd"
         type: "bind"
-        read_only: true
-  when: postgres_docker_use_volumes
+        read_only: "true"
+  when: "postgres_docker_use_volumes"
 
-- name: Create Docker network
+- name: "Create Docker network"
   community.docker.docker_network:
     name: "{{ postgres_docker_network_name }}"
     driver: "{{ postgres_docker_network_driver }}"
@@ -136,19 +137,21 @@
     ipam_config:
       - subnet: "{{ postgres_docker_network_subnet }}"
         gateway: "{{ postgres_docker_network_gateway }}"
-  when: postgres_docker_network_create
+  when: "postgres_docker_network_create"
 
-- name: Define Docker labels with Traefik disabled
+- name: "Define Docker labels with Traefik disabled"
   ansible.builtin.set_fact:
-    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine({item.key: item.value}) }}"
+    postgres_docker_labels: "{{ postgres_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ postgres_docker_available_externally }}"
-  when: not postgres_docker_available_externally
+  when: "not postgres_docker_available_externally"
 
-- name: Define Docker labels with Traefik enabled
+- name: "Define Docker labels with Traefik enabled"
   ansible.builtin.set_fact:
-    postgres_docker_labels: "{{ postgres_docker_labels | default({}) | combine({item.key: item.value}) }}"
+    postgres_docker_labels: "{{ postgres_docker_labels | default({}) |
+      combine({item.key: item.value}) }}"
   with_items:
     - key: "traefik.enable"
       value: "{{ postgres_docker_available_externally }}"
@@ -158,9 +161,9 @@
       value: "HostSNI(`*`)"
     - key: "traefik.tcp.services.{{ postgres_docker_traefik_entrypoint }}.loadBalancer.server.port"
       value:  "5432"
-  when: postgres_docker_available_externally
+  when: "postgres_docker_available_externally"
 
-- name: Create PostgreSQL Docker container
+- name: "Create PostgreSQL Docker container"
   community.docker.docker_container:
     name: "{{ postgres_docker_name }}"
     image: "{{ postgres_docker_image }}"
@@ -170,53 +173,53 @@
       POSTGRES_USER: "{{ postgres_docker_admin_user }}"
     shm_size: "{{ postgres_docker_shm_size | default(omit) }}"
     network_mode: "{{ postgres_docker_network_name }}"
-    restart_policy: unless-stopped
+    restart_policy: "unless-stopped"
     memory: "{{ postgres_docker_memory }}"
     cpus: "{{ postgres_docker_cpu }}"
-    container_default_behavior: no_defaults
-    auto_remove: no
-    detach: yes
-    init: yes
-    interactive: no
-    paused: no
-    privileged: no
-    read_only: no
-    tty: no
+    container_default_behavior: "no_defaults"
+    auto_remove: "no"
+    detach: "yes"
+    init: "yes"
+    interactive: "no"
+    paused: "no"
+    privileged: "no"
+    read_only: "no"
+    tty: "no"
     labels: "{{ postgres_docker_labels }}"
-  register: pgc
+  register: "pgc"
 
-- name: Wait until PostgreSQL is healthy
+- name: "Wait until PostgreSQL is healthy"
   community.docker.docker_container_exec:
     container: "{{ postgres_docker_name }}"
     command: "pg_isready"
-  register: pg_isready
-  until: pg_isready.rc == 0
+  register: "pg_isready"
+  until: "pg_isready.rc == 0"
   retries: 12
   delay: 5
-  changed_when: false
+  changed_when: "false"
 
-- name: Get info on data Docker volume
+- name: "Get info on data Docker volume"
   community.docker.docker_volume_info:
     name: "{{ postgres_docker_volume_data_name }}"
-  register: postgres_docker_volume_data_info
-  when: postgres_docker_use_volumes
+  register: "postgres_docker_volume_data_info"
+  when: "postgres_docker_use_volumes"
 
-- name: Copy pg_hba config to Docker volume
+- name: "Copy pg_hba config to Docker volume"
   ansible.builtin.copy:
     content: "{{ postgres_docker_pg_hba_conf }}"
     dest: "{{ postgres_docker_volume_data_info['volume']['Mountpoint'] }}/pg_hba.conf"
     owner: "{{ postgres_docker_user }}"
     group: "{{ postgres_docker_group }}"
-    mode: "640"
-  notify: Restart PostgreSQL Docker Container
-  when: postgres_docker_use_volumes
+    mode: "0640"
+  notify: "Restart PostgreSQL Docker Container"
+  when: "postgres_docker_use_volumes"
 
-- name: Copy pg_hba config to bind mount
+- name: "Copy pg_hba config to bind mount"
   ansible.builtin.copy:
     content: "{{ postgres_docker_pg_hba_conf }}"
     dest: "{{ postgres_docker_data_dir }}/pg_hba.conf"
     owner: "{{ postgres_docker_user }}"
     group: "{{ postgres_docker_group }}"
-    mode: "640"
-  notify: Restart PostgreSQL Docker Container
-  when: not postgres_docker_use_volumes
+    mode: "0640"
+  notify: "Restart PostgreSQL Docker Container"
+  when: "not postgres_docker_use_volumes"

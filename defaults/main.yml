@@ -1,3 +1,4 @@
+---
 postgres_docker_name: "postgres"
 postgres_docker_admin_user: "postgres"
 postgres_docker_admin_password: "changeme"
@@ -12,10 +13,11 @@ postgres_docker_data_dir: "{{ postgres_docker_home_dir }}/data"
 
 # Optional initialization scripts to copy into the PostgreSQL Docker container.
 #
-# Must be path names for files already on the remote system. The container only supports  *.sql,
-# *.sql.gz, and *.sh scripts. After the container calls initdb to create the default postgres user
-# and database, it will run any *.sql files, run any executable *.sh scripts, and source any
-# non-executable *.sh scripts from this list to do further initialization before starting the
+# Must be path names for files already on the remote system. The container only
+# supports  *.sql, *.sql.gz, and *.sh scripts. After the container calls initdb
+# to create the default postgres user and database, it will run any *.sql
+# files, run any executable *.sh scripts, and source any non-executable *.sh
+# scripts from this list to do further initialization before starting the
 # service.
 postgres_docker_initscripts: []
 
@@ -24,8 +26,8 @@ postgres_docker_volume_init_name: "postgresql-initscripts"
 postgres_docker_volume_conf_name: "postgresql-conf"
 postgres_docker_volume_data_name: "postgresql-data"
 
-postgres_docker_pgdata:
-postgres_docker_wal_dir:
+postgres_docker_pgdata: null
+postgres_docker_wal_dir: null
 
 postgres_docker_memory: "4GB"
 postgres_docker_cpu: "4"

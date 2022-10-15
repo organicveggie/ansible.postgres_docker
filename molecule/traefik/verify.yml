@@ -1,5 +1,6 @@
-- name: Verify
-  hosts: all
+---
+- name: "Verify"
+  hosts: "all"
   gather_facts: false
 
   vars:
@@ -9,48 +10,51 @@
     pg_docker_volume_name_data: "postgresql-data"
 
   tasks:
-    - name: Get info on init volume
+    - name: "Get info on init volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_init }}"
-      register: volume_info_init
+      register: "volume_info_init"
 
-    - name: Verify init volume exists
+    - name: "Verify init volume exists"
       ansible.builtin.assert:
-        that: volume_info_init.exists
+        that: "volume_info_init.exists"
 
-    - name: Get info on conf volume
+    - name: "Get info on conf volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_conf }}"
-      register: volume_info_conf
+      register: "volume_info_conf"
 
-    - name: Verify conf volume exists
+    - name: "Verify conf volume exists"
       ansible.builtin.assert:
-        that: volume_info_conf.exists
+        that: "volume_info_conf.exists"
 
-    - name: Get info on data volume
+    - name: "Get info on data volume"
       community.docker.docker_volume_info:
         name: "{{ pg_docker_volume_name_data }}"
-      register: volume_info_data
+      register: "volume_info_data"
 
-    - name: Verify data volume exists
+    - name: "Verify data volume exists"
       ansible.builtin.assert:
-        that: volume_info_data.exists
+        that: "volume_info_data.exists"
 
-    - name: Get info on container
+    - name: "Get info on container"
       community.docker.docker_container_info:
         name: "{{ pg_docker_name }}"
-      register: container_info
+      register: "container_info"
 
-    - name: Verify container exists and is running
+    - name: "Verify container exists and is running"
       ansible.builtin.assert:
         that:
-          - container_info.exists
-          - container_info.container['State']['Running']
-  
-    - name: Verify container labels
+          - "container_info.exists"
+          - "container_info.container['State']['Running']"
+
+    - name: "Verify container labels"
       ansible.builtin.assert:
         that:
-          - container_info.container['Config']['Labels']['traefik.enable'] == "true"
-          - container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.entrypoints'] == "{{ pg_docker_name }}"
-          - container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.rule'] == "HostSNI(`*`)"
-          - container_info.container['Config']['Labels']['traefik.tcp.services.postgres.loadBalancer.server.port'] == "5432"
+          - "container_info.container['Config']['Labels']['traefik.enable'] == 'true'"
+          - "container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.entrypoints']
+            == '{{ pg_docker_name }}'"
+          - "container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.rule']
+            == 'HostSNI(`*`)'"
+          - "container_info.container['Config']['Labels']
+            ['traefik.tcp.services.postgres.loadBalancer.server.port'] == '5432'"

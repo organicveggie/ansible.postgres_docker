@@ -73,6 +73,10 @@ jobs:
       - name: "Initialize lxd"
         uses: "bonddim/action-lxd-init@stable"
 
+      - name: "Install molecule-lxd bridge"
+        run: |
+          python3 -m pip install molecule-lxd
+
       - name: "Run Molecule testts"
         run: |
           molecule --debug test -d lxd --scenario-name ${{ matrix.scenario }}

@@ -75,7 +75,7 @@ jobs:
 
       - name: "Run Molecule testts"
         run: |
-          molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
+          molecule --debug test --scenario-name ${{ matrix.scenario }}
         working-directory: "${{ env.PROJECT_NAME }}"
         env:
           PY_COLORS: "1"

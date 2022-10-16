@@ -14,8 +14,8 @@ platforms:
     command: "${MOLECULE_DOCKER_COMMAND:-''}"
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    privileged: true
-    pre_build_image: true
+    privileged: "true"
+    pre_build_image: "true"
 
   - name: "lxd-instance"
     url: "${LXD_HOST:-unix:/var/snap/lxd/common/lxd/unix.socket}"

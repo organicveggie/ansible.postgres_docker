@@ -78,6 +78,7 @@ jobs:
           molecule --debug test --scenario-name ${{ matrix.scenario }} -d docker
         working-directory: "${{ env.PROJECT_NAME }}"
         env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_DRIVER_NAME: "lxd"
           MOLECULE_PLAYBOOK: "${{ matrix.playbook }}"

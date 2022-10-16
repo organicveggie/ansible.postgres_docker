@@ -6,7 +6,7 @@ dependency:
     role-file: "molecule/resources/requirements.yml"
 
 driver:
-  name: "${MOLECULE_DRIVER_NAME:-docker}"
+  name: "docker"
 
 platforms:
   - name: "instance"

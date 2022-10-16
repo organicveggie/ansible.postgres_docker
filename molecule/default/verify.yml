@@ -48,13 +48,16 @@
           - "container_info.exists"
           - "container_info.container['State']['Running']"
 
-    - name: "Verify container labels"
+    - name: "Verify Traefik label"
       ansible.builtin.assert:
         that:
           - "container_info.container['Config']['Labels']['traefik.enable'] == 'false'"
-          - "not container_info.container['Config']['Labels']
-            ['traefik.tcp.routers.postgres.entrypoints'] | default(None)"
-          - "not container_info.container['Config']['Labels']['traefik.tcp.routers.postgres.rule']
-            | default(None)"
-          - "not container_info.container['Config']['Labels']
-            ['traefik.tcp.services.postgres.loadBalancer.server.port'] | default(None)"
+
+# - name: "Verify additionl container labels not set"
+#   ansible.builtin.assert:
+#     that:
+#       - "not container_info.container['Config']['Labels'][{{ item }}] | default(None)"
+#   with_items:
+#     - "traefik.tcp.routers.postgres.entrypoints"
+#     - "traefik.tcp.routers.postgres.rule"
+#     - "traefik.tcp.services.postgres.loadBalancer.server.port"

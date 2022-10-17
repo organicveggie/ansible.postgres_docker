@@ -77,8 +77,9 @@ jobs:
         run: |
           python3 -m pip install molecule-lxd
 
-      - name: "Run Molecule testts"
+      - name: "Run Molecule tests"
         run: |
+          # yamllint disable-line rule:line-length
           molecule --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
         working-directory: "${{ env.PROJECT_NAME }}"
         env:

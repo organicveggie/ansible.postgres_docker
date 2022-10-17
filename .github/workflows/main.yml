@@ -78,9 +78,10 @@ jobs:
           python3 -m pip install molecule-lxd
 
       - name: "Run Molecule tests"
+        # yamllint disable rule:line-length
         run: |
-          # yamllint disable-line rule:line-length
           molecule --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
+        # yamllint enable rule:line-length
         working-directory: "${{ env.PROJECT_NAME }}"
         env:
           PY_COLORS: "1"

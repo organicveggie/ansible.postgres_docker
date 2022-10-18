@@ -60,29 +60,39 @@ jobs:
         with:
           path: "${{ env.PROJECT_NAME }}"
 
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: '3.x'
 
-      - name: "Install test dependencies"
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ansible molecule molecule[docker]
+      # - name: "Set up Python"
+      #   uses: "actions/setup-python@v2"
+      #   with:
+      #     python-version: 3.8
+
+      # - name: "Install test dependencies"
+      #   run: |
+      #     python3 -m pip install --upgrade pip
+      #     python3 -m pip install ansible molecule molecule[docker]
 
       - name: "Initialize lxd"
         uses: "bonddim/action-lxd-init@stable"
 
-      - name: "Install molecule-lxd bridge"
-        run: |
-          python3 -m pip install molecule-lxd
+      # - name: "Install molecule-lxd bridge"
+      #   run: |
+      #     python3 -m pip install molecule-lxd
 
-      - name: "Run Molecule tests"
-        # yamllint disable rule:line-length
-        run: |
-          molecule --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
-        # yamllint enable rule:line-length
-        working-directory: "${{ env.PROJECT_NAME }}"
-        env:
-          PY_COLORS: "1"
-          ANSIBLE_FORCE_COLOR: "1"
+      - run: python -m pip install tox
+
+      # - name: "Run Molecule tests"
+      #   # yamllint disable rule:line-length
+      #   run: |
+      #     molecule --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
+      #   # yamllint enable rule:line-length
+      #   working-directory: "${{ env.PROJECT_NAME }}"
+      #   env:
+      #     PY_COLORS: "1"
+      #     ANSIBLE_FORCE_COLOR: "1"
+
+      - name: 'Run tests with tox'
+        run: tox -- --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
+        working-directory: ${{ env.PROJECT_NAME }}

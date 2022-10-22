@@ -10,89 +10,70 @@ on:
       - "main"
   workflow_dispatch: null
 
-env:
-  PROJECT_NAME: "organicveggie.postgres_docker"
+defaults:
+  run:
+    working-directory: "organicveggie.postgres_docker"
 
 jobs:
   lint:
     name: "Lint"
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-22.04"
     steps:
       - name: "Check out the codebase."
         uses: "actions/checkout@v2"
         with:
-          path: "${{ env.PROJECT_NAME }}"
+          path: "organicveggie.postgres_docker"
 
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
+      - name: "Set up Python 3."
+        uses: "actions/setup-python@v4"
         with:
-          python-version: 3.8
+          python-version: "3.x"
 
       - name: "Install lint dependencies."
         run: "pip3 install yamllint ansible ansible-lint"
 
-      - name: "Run yamllint"
+      - name: "Run linters"
         run: |
           yamllint -c .yamllint -f github -s .
-        working-directory: "${{ env.PROJECT_NAME }}"
-
-      - name: "Install roles and run ansible-lint"
-        run: |
-          ansible-galaxy role install -r molecule/resources/requirements.yml
           ansible-lint
-        working-directory: "${{ env.PROJECT_NAME }}"
+        working-directory: "organicveggie.postgres_docker"
 
-  molecule:
-    name: "Molecule"
-    runs-on: "ubuntu-latest"
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - "default"
-          # - "custom_names"
-          # - "init_scripts"
-          # - "no_volumes"
-          # - "traefik"
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-        with:
-          path: "${{ env.PROJECT_NAME }}"
+# yamllint disable rule:comments-indentation
+  # molecule:
+  #   name: "Molecule"
+  #   runs-on: "ubuntu-22.04"
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       distro:
+  #         - "centos8"
+  #         - "ubuntu2204"
+  #         - "ubuntu2004"
+  #         - "ubuntu1804"
+  #         - "debian11"
+  #         - "debian10"
+  #         - "fedora34"
+  #         - "fedora33"
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+  #   steps:
+  #     - name: "Check out the codebase."
+  #       uses: "actions/checkout@v2"
+  #       with:
+  #         path: "organicveggie.postgres_docker"
 
-      # - name: "Set up Python"
-      #   uses: "actions/setup-python@v2"
-      #   with:
-      #     python-version: 3.8
+  #     - name: "Set up Python 3."
+  #       uses: "actions/setup-python@v4"
+  #       with:
+  #         python-version: "3.x"
 
-      # - name: "Install test dependencies"
-      #   run: |
-      #     python3 -m pip install --upgrade pip
-      #     python3 -m pip install ansible molecule molecule[docker]
+  #     - name: "Install tox"
+  #       run: >
+  #         python -m pip install tox
 
-      - name: "Initialize lxd"
-        uses: "bonddim/action-lxd-init@stable"
-
-      # - name: "Install molecule-lxd bridge"
-      #   run: |
-      #     python3 -m pip install molecule-lxd
-
-      - run: python -m pip install tox
-
-      # - name: "Run Molecule tests"
-      #   # yamllint disable rule:line-length
-      #   run: |
-      #     molecule --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
-      #   # yamllint enable rule:line-length
-      #   working-directory: "${{ env.PROJECT_NAME }}"
-      #   env:
-      #     PY_COLORS: "1"
-      #     ANSIBLE_FORCE_COLOR: "1"
-
-      - name: 'Run tests with tox'
-        run: tox -- --debug test --driver-name lxd --platform-name "lxd-instance" --scenario-name ${{ matrix.scenario }}
-        working-directory: ${{ env.PROJECT_NAME }}
+  #     - name: "Run Molecule tests."
+  #       run: "tox -- --debug test"
+  #       env:
+  #         PY_COLORS: "1"
+  #         ANSIBLE_FORCE_COLOR: "1"
+  #         MOLECULE_DISTRO: "${{ matrix.distro }}"
+# yamllint enable rule:comments-indentation

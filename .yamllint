@@ -51,7 +51,7 @@ rules:
     forbid-explicit-octal: true
   quoted-strings:
     quote-type: "any"
-    required: true
+    required: false
     extra-required: []
     extra-allowed: []
     allow-quoted-quotes: false

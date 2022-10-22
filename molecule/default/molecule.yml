@@ -6,12 +6,12 @@ dependency:
     role-file: "molecule/resources/requirements.yml"
 
 driver:
-  name: "${MOLECULE_DRIVER_NAME:-docker}"
+  name: ${MOLECULE_DRIVER_NAME:-docker}
 
 platforms:
-  - name: "instance"
+  - name: "docker-instance"
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
-    command: "${MOLECULE_DOCKER_COMMAND:-''}"
+    command: ${MOLECULE_DOCKER_COMMAND:-''}
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
     privileged: true

@@ -1,9 +1,9 @@
 ---
 collections:
   - name: "community.docker"
-    version: ">=1.2.0,<2"
+    version: ">=3.1.0,<4"
   - name: "community.general"
-    version: ">=2,<3"
+    version: ">=5.0.0,<6"
 
 roles:
   - src: "geerlingguy.repo-epel"

@@ -34,7 +34,7 @@ jobs:
       
       - name: "Install Ansible role requirements"
         run: >
-          ansible-galaxy role install molecule/resources/requirements.yml
+          ansible-galaxy role install --role-file molecule/resources/requirements.yml
         working-directory: "organicveggie.postgres_docker"
 
       - name: "Run linters"
@@ -72,7 +72,7 @@ jobs:
 
       - name: "Run Molecule tests."
         run: >
-          tox -- --debug test --platform_name lxd-instance --driver-name lxd --scenario_name default
+          tox -- --debug test --platform-name lxd-instance --driver-name lxd --scenario-name default
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"

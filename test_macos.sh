@@ -1,3 +1,3 @@
 #!/bin/sh
 
-molecule -p docker-instance "$@"
+tox -- test --platform-name vagrant-instance "$@"

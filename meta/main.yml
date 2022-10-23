@@ -2,10 +2,24 @@
 galaxy_info:
   role_name: "postgres_docker"
   author: "organicveggie"
-  description: "Role to install PostgreSQL Docker container."
-  license: "Apache"
-  min_ansible_version: "2.8"
+  description: "Role to install PostgreSQL Docker container on Linux."
+
+  license: "license GPL-3.0-only"
+
+  min_ansible_version: "2.13"
+
   platforms:
+    - name: "EL"
+      versions:
+        - "8"
+    - name: "Fedora"
+      versions:
+        - "34"
+        - "33"
+    - name: "Debian"
+      versions:
+        - "buster"
+        - "bullseye"
     - name: "Ubuntu"
       versions:
         - "focal"
@@ -14,5 +28,6 @@ galaxy_info:
     - "postgres"
     - "postgresql"
     - "docker"
+    - "linux"
 
 dependencies: []

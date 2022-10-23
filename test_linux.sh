@@ -1,3 +1,3 @@
 #!/bin/sh
 
-molecule -p lxd-instance "$@"
+tox -- test --platform-name lxd-instance --driver-name lxd "$@"

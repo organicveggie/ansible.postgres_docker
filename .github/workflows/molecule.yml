@@ -38,6 +38,41 @@ jobs:
           ansible-lint
         working-directory: "organicveggie.postgres_docker"
 
+  molecule:
+    name: "Molecule"
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - "ubuntu/20.04/cloud"
+
+    steps:
+      - name: "Check out the codebase."
+        uses: "actions/checkout@v2"
+        with:
+          path: "organicveggie.postgres_docker"
+
+      - name: "Set up Python 3."
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.x"
+
+      - name: "Initialize LXD"
+        uses: bonddim/action-lxd-init@stable
+
+      - name: "Install tox"
+        run: >
+          python -m pip install tox
+
+      - name: "Run Molecule tests."
+        run: >
+          tox -- --debug test --platform_name lxd-instance --driver lxd --scenarior_name default
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_DISTRO: "${{ matrix.distro }}"
+
 # yamllint disable rule:comments-indentation
   # molecule:
   #   name: "Molecule"

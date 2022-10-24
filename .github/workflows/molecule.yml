@@ -50,6 +50,9 @@ jobs:
       fail-fast: false
       matrix:
         distro:
+          - "centos/8-Stream/cloud"
+          - "debian/bullseye/cloud"
+          - "fedora/35/cloud"
           - "ubuntu/20.04/cloud"
 
     steps:

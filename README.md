@@ -1,5 +1,10 @@
 # Ansible Role: PostgreSQL on Docker <!-- omit in toc -->
 
+[![github](https://github.com/organicveggie/ansible.postgres_docker/workflows/Molecule/badge.svg)](https://github.com/organicveggie/ansible.postgres_docker/actions)
+[![Issues](https://img.shields.io/github/issues/organicveggie/ansible.postgres_docker.svg)](https://github.com/organicveggie/ansible.postgres_docker/issues/)
+[![PullRequests](https://img.shields.io/github/issues-pr-closed-raw/organicveggie/ansible.postgres_docker.svg)](https://github.com/organicveggie/ansible.postgres_docker/pulls/)
+[![Last commit](https://img.shields.io/github/last-commit/organicveggie/ansible.postgres_docker?logo=github)](https://github.com/organicveggie/ansible.postgres_docker/commits/main)
+
 An [Ansible](https://www.ansible.com/) role to setup and run the [PostgreSQL](https://www.postgresql.org/)
 [Docker](http://www.docker.com) [container](https://hub.docker.com/_/postgres).
 

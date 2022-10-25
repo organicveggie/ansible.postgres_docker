@@ -46,7 +46,7 @@ jobs:
         working-directory: "organicveggie.postgres_docker"
 
   molecule-full:
-    name: "Molecule Full Suite for Latest Distros"
+    name: "Molecule Full"
     runs-on: "ubuntu-latest"
     strategy:
       fail-fast: false
@@ -86,7 +86,7 @@ jobs:
           MOLECULE_SCENARIO_NAME: "${{ matrix.scenario }}"
 
   molecule-regression:
-    name: "Molecule Default Tests for Older Distros"
+    name: "Molecule Lite"
     runs-on: "ubuntu-latest"
     strategy:
       fail-fast: false

@@ -51,9 +51,10 @@ jobs:
       matrix:
         distro:
           - "centos/8-Stream/cloud"
-          - "debian/bullseye/cloud"
-          - "fedora/35/cloud"
+          # - "debian/bullseye/cloud"
+          # - "fedora/35/cloud"
           - "ubuntu/20.04/cloud"
+          - "ubuntu/22.04/cloud"
 
     steps:
       - name: "Check out the codebase."

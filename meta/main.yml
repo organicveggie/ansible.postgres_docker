@@ -14,14 +14,15 @@ galaxy_info:
         - "8"
     - name: "Fedora"
       versions:
-        - "34"
-        - "33"
+        - "35"
+        - "36"
     - name: "Debian"
       versions:
         - "buster"
         - "bullseye"
     - name: "Ubuntu"
       versions:
+        - "bionic"
         - "focal"
         - "jammy"
   galaxy_tags:

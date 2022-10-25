@@ -29,8 +29,8 @@ postgres_docker_volume_data_name: "postgresql-data"
 postgres_docker_pgdata: null
 postgres_docker_wal_dir: null
 
-# postgres_docker_memory: "4GB"
-# postgres_docker_cpu: "4"
+postgres_docker_memory: "4GB"
+postgres_docker_cpu: "4"
 # postgres_docker_shm_size: "256MB"
 
 postgres_docker_network_create: false

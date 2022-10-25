@@ -1,0 +1,101 @@
+---
+argument_specs:
+  main:
+    short_description: "Install PostgreSQL on Docker."
+    description:
+      - "The main entry point does everything."
+
+    options:
+      postgres_docker_name:
+        type: "str"
+        required: false
+        default: "postgres"
+        description: |
+          Name of the Docker container.
+
+      postgres_docker_admin_password:
+        type: "str"
+        required: false
+        default: "changeme"
+        description: |
+          Superuser password.
+
+      postgres_docker_initscripts:
+        type: "list"
+        elements: "str"
+        required: false
+        default: []
+        description: |
+          Optional initialization scripts to copy into the PostgreSQL Docker container. These can
+          be `.sql`, `sql.gz`, or `.sh` files. They *must* already exist on the target system, so
+          that this role can copy them into the Docker container.
+
+          After container calls `initdb` to create the default `postgres` user and database, it will
+          run any `*.sql` files, run any executable `*.sh` scripts, and source any non-executable
+          `*.sh` scripts  before starting the service. Scripts are only run if you start the
+          container with a data directory that is empty; any pre-existing database will be left
+          untouched on container startup. One common problem is that if one of your scripts fails
+          and your orchestrator restarts the container with the already initialized data directory,
+          it will not continue on with your scripts.
+
+          Initialization files will be executed in sorted name order as defined by the current
+          locale, which defaults to `en_US.utf8`. Any `*.sql` files will be executed by
+          `POSTGRES_USER`, which defaults to the `postgres` superuser. It is recommended that any
+          `psql` commands that are run inside of a `*.sh` script be executed as `POSTGRES_USER` by
+          using the `--username "$POSTGRES_USER"` flag. This user will be able to connect without a
+          password due to the presence of `trust` authentication for Unix socket connections made
+          inside the container.
+
+      postgres_docker_use_volumes:
+        type: "bool"
+        required: false
+        default: true
+        description: |
+          Whether or not to use Docker volumes. True will create dedicated two Docker volumes:
+
+          - One for the config files mounted at `/etc/postgresql`.
+          - One for the data files mounted at `/var/lib/postgresql/data`.
+
+      postgres_docker_memory:
+        type: "str"
+        required: false
+        default: "4GB"
+        description: |
+          Amount of memory to allocate to the PostgreSQL container.
+
+      postgres_docker_cpu:
+        type: "int"
+        required: false
+        default: "4G"
+        description: |
+          Number of vCPUs to allocate to the PostgreSQL container.
+
+      postgres_docker_network_create:
+        type: "bool"
+        required: false
+        default: false
+        description: |
+          Whether or not to create a Docker network for the PostgreSQL container. True will create
+          a network specifically for this container. False will not create a network, but will
+          automatically join the network specified in `postgres_docker_network_name`.
+
+      postgres_docker_network_name:
+        type: "str"
+        required: false
+        default: "postgres"
+        description: |
+          Name of the Docker network to join. Especially useful if `postgres_docker_network_create`
+          is set to false.
+
+      postgres_docker_image:
+        type: "str"
+        required: false
+        default: "postgres:latest"
+        description: |
+          Name and label of the Docker image to use.
+
+      postgres_docker_available_externally:
+        type: "bool"
+        default: false
+        description: |
+          Whether or not to enable in [Traefik Proxy](https://doc.traefik.io/traefik/).

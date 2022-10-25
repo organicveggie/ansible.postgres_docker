@@ -114,7 +114,6 @@ vars:
     - organicveggie.postgres_docker
 ```
 
-
 ## License
 
 [Apache](LICENSE)

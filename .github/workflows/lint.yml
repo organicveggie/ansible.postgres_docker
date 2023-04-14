@@ -12,9 +12,9 @@ on:
   schedule:
     - cron: "0 6 * * 0"
 
-defaults:
-  run:
-    working-directory: "organicveggie.postgres_docker"
+# defaults:
+#   run:
+#     working-directory: "organicveggie.postgres_docker"
 
 jobs:
   lint:
@@ -23,8 +23,8 @@ jobs:
     steps:
       - name: "Check out the codebase."
         uses: "actions/checkout@v3"
-        with:
-          path: "organicveggie.postgres_docker"
+        # with:
+        #   path: "organicveggie.postgres_docker"
 
       - name: "Set up Python 3."
         uses: "actions/setup-python@v4"
@@ -37,10 +37,10 @@ jobs:
       - name: "Install Ansible role requirements"
         run: >
           ansible-galaxy role install --role-file molecule/resources/requirements.yml
-        working-directory: "organicveggie.postgres_docker"
+        # working-directory: "organicveggie.postgres_docker"
 
       - name: "Run linters"
         run: |
           yamllint -c .yamllint -f github -s .
           ansible-lint
-        working-directory: "organicveggie.postgres_docker"
+        # working-directory: "organicveggie.postgres_docker"

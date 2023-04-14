@@ -1,21 +1,11 @@
 ---
 name: "Molecule"
 
-on:
-  push:
-    branches:
-      - "main"
-  pull_request:
-    branches:
-      - "main"
-  workflow_dispatch: null
-
-env:
-  PROJECT_DIRECTORY: "organicveggie.postgres_docker"
+on: workflow_dispatch
 
 defaults:
   run:
-    working-directory: "$PROJECT_DIRECTORY"
+    working-directory: "organicveggie.postgres_docker"
 
 jobs:
   molecule-full:
@@ -35,7 +25,7 @@ jobs:
       - name: "Check out the codebase."
         uses: "actions/checkout@v3"
         with:
-          path: "$PROJECT_DIRECTORY"
+          path: "organicveggie.postgres_docker"
 
       - name: "Set up Python 3."
         uses: "actions/setup-python@v4"
@@ -57,7 +47,7 @@ jobs:
           ANSIBLE_FORCE_COLOR: "1"
           MOLECULE_DISTRO: "${{ matrix.distro }}"
           MOLECULE_SCENARIO_NAME: "${{ matrix.scenario }}"
-        working-directory: "$PROJECT_DIRECTORY"
+        working-directory: "organicveggie.postgres_docker"
 
   molecule-regression:
     name: "Molecule Lite"
@@ -77,7 +67,7 @@ jobs:
       - name: "Check out the codebase."
         uses: "actions/checkout@v3"
         with:
-          path: "$PROJECT_DIRECTORY"
+          path: "organicveggie.postgres_docker"
 
       - name: "Set up Python 3."
         uses: "actions/setup-python@v4"
@@ -99,4 +89,4 @@ jobs:
           ANSIBLE_FORCE_COLOR: "1"
           MOLECULE_DISTRO: "${{ matrix.distro }}"
           MOLECULE_SCENARIO_NAME: "${{ matrix.scenario }}"
-        working-directory: "$PROJECT_DIRECTORY"
+        working-directory: "organicveggie.postgres_docker"

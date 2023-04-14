@@ -40,8 +40,10 @@ jobs:
       - name: "Install Ansible role requirements"
         run: >
           ansible-galaxy role install --role-file molecule/resources/requirements.yml
+        working-directory: "$PROJECT_DIRECTORY"
 
       - name: "Run linters"
         run: |
           yamllint -c .yamllint -f github -s .
           ansible-lint
+        working-directory: "$PROJECT_DIRECTORY"

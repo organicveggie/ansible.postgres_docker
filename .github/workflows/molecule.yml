@@ -57,6 +57,7 @@ jobs:
           ANSIBLE_FORCE_COLOR: "1"
           MOLECULE_DISTRO: "${{ matrix.distro }}"
           MOLECULE_SCENARIO_NAME: "${{ matrix.scenario }}"
+        working-directory: "$PROJECT_DIRECTORY"
 
   molecule-regression:
     name: "Molecule Lite"
@@ -98,3 +99,4 @@ jobs:
           ANSIBLE_FORCE_COLOR: "1"
           MOLECULE_DISTRO: "${{ matrix.distro }}"
           MOLECULE_SCENARIO_NAME: "${{ matrix.scenario }}"
+        working-directory: "$PROJECT_DIRECTORY"

@@ -2,8 +2,8 @@
 dependency:
   name: "galaxy"
   options:
-    requirements-file: "molecule/resources/requirements.yml"
-    role-file: "molecule/resources/requirements.yml"
+    requirements-file: "requirements.yml"
+    role-file: "requirements.yml"
 
 driver:
   name: vagrant

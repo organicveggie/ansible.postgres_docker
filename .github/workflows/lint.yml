@@ -26,7 +26,7 @@ jobs:
 
       - name: "Install Ansible role requirements"
         run: >
-          ansible-galaxy role install --role-file molecule/resources/requirements.yml
+          ansible-galaxy role install --role-file requirements.yml
 
       - name: "Run linters"
         run: |

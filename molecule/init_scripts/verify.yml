@@ -53,8 +53,8 @@
       community.docker.docker_container_exec:
         container: "{{ pg_docker_name }}"
         command: |
-          psql --csv --tuples-only --username molecule --dbname molecule
-          --command 'SELECT * FROM test;'"
+          psql --csv --tuples-only --username postgresmolecule --dbname molecule
+          --command 'SELECT * FROM test;'
       register: "psql_result"
 
     - name: "Verify table data output"

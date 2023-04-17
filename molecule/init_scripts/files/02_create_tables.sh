@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-psql -v ON_ERROR_STOP=1 --username "molecule" --dbname "molecule" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "molecule" <<-EOSQL
 	CREATE TABLE test (
         id int CONSTRAINT id_pk PRIMARY KEY
     );

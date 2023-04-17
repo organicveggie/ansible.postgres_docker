@@ -1,6 +1,7 @@
 # Ansible Role: PostgreSQL on Docker <!-- omit in toc -->
 
-[![github](https://github.com/organicveggie/ansible.postgres_docker/workflows/Molecule/badge.svg)](https://github.com/organicveggie/ansible.postgres_docker/actions)
+[![github](https://github.com/organicveggie/ansible.postgres_docker/workflows/Molecule/badge.svg)](https://github.com/organicveggie/ansible.postgres_docker/actions/workflows/molecule.yml)
+[![github](https://github.com/organicveggie/ansible.postgres_docker/workflows/Lint/badge.svg)](https://github.com/organicveggie/ansible.postgres_docker/actions/workflows/lint.yml)
 [![Issues](https://img.shields.io/github/issues/organicveggie/ansible.postgres_docker.svg)](https://github.com/organicveggie/ansible.postgres_docker/issues/)
 [![PullRequests](https://img.shields.io/github/issues-pr-closed-raw/organicveggie/ansible.postgres_docker.svg)](https://github.com/organicveggie/ansible.postgres_docker/pulls/)
 [![Last commit](https://img.shields.io/github/last-commit/organicveggie/ansible.postgres_docker?logo=github)](https://github.com/organicveggie/ansible.postgres_docker/commits/main)
@@ -84,7 +85,7 @@ Shell script to setup new user and database: `01_create_example.sh`
 #!/bin/sh
 set -e
 
-psql -v ON_ERROR_STOP=1 --username "molecule" --dbname "molecule" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES" --dbname "molecule" <<-EOSQL
     CREATE USER example;
     CREATE DATABASE exampledb;
     GRANT ALL PRIVILEGES ON DATABASE exampledb TO example;

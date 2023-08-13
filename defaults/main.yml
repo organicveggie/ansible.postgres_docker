@@ -74,6 +74,8 @@ postgres_docker_postgres_conf: |
   lc_numeric = 'en_US.utf8'
   lc_time = 'en_US.utf8'
   default_text_search_config = 'pg_catalog.english'
+  # - Connection Settings -
+  listen_addresses = '*'
 
 ###
 ### Traefik integration
